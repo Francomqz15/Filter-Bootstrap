@@ -4,8 +4,8 @@ function filterData(params) {
 	this.idRender = document.getElementById(params.idRender); 
 	this.showElemRender = params.showElemRender;
 
-	this.classElemFather = params.classElemFather;
-	this.classElemChild  = params.classElemChild;
+	this.ElemFather = params.ElemFather;
+	this.ElemChild  = params.ElemChild;
 
 	this.showElementRender = function(filter, visibility) {
 			if (visibility == 'show') {
@@ -21,27 +21,34 @@ function filterData(params) {
 
 
 	this.InitSearch = function() {
-		  	var filter, classElemFather, classElemChild, i;
+		  	var filter, ElemFather, ElemChild, i;
 
-		  	filter          = this.idInput.value.toUpperCase();
-		  	classElemFather = this.idRender.getElementsByClassName(this.classElemFather);
+		  	filter = this.idInput.value.toUpperCase();
 
 		  	if (this.showElemRender) 
 		  		this.showElementRender(filter, 'show')
 		  	else 
 				this.showElementRender(filter, 'remove')
 
-		  // Loop through all idRender rows, and hide those who don't match the search query
-		  for (i = 0; i < classElemFather.length; i++) {
+			ElemFather = this.idRender.getElementsByClassName(this.ElemFather);
 
-		  	classElemChild = classElemFather[i].getElementsByClassName(this.classElemChild)[0];
+			if (ElemFather.length == 0) 
+				ElemFather = this.idRender.getElementsByTagName(this.ElemFather);
 
-		  	if (classElemChild) {
-		  		if (classElemChild.innerHTML.toUpperCase().indexOf(filter) > -1) {
-		  			classElemFather[i].style.display = "";
-		  		} else {
-		  			classElemFather[i].style.display = "none";
-		  		}
+		  for (i = 0; i < ElemFather.length; i++) {
+
+		  	ElemChild = ElemFather[i].getElementsByClassName(this.ElemChild)[0];
+
+		  	if (ElemChild == undefined)
+		  		ElemChild = ElemFather[i].getElementsByTagName(this.ElemChild)[0]
+
+
+		  	if (ElemChild) {
+		  		if (ElemChild.innerHTML.toUpperCase().indexOf(filter) > -1) 
+		  			ElemFather[i].style.display = "";
+		  		else 
+		  			ElemFather[i].style.display = "none";
+		  		
 		  	} 
 		  }
 	}
@@ -51,12 +58,12 @@ var params = {
 	jsonList        : jsonList,
 	idInput         : "myInput",
 	idRender        : "myList",
-	classElemFather  :  "item-list",
-	classElemChild   :  "item-list-child",
-	showElemRender  : true // if true wrap is hide when init and is hide when input has nor element 
+	ElemFather  :  "label",
+	ElemChild   :  "span",
+	showElemRender  : true 
 };
 
-function InitSearch() {
+function searchFilters() {
 	var newFilter = new filterData(params)
 	newFilter.InitSearch()
 }
